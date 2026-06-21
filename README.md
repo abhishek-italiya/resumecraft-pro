@@ -106,14 +106,6 @@ Ensure you have **Node.js (v18.0.0 or higher)** and **npm** installed.
 
 ---
 
-## 📸 Screenshots
-
-### Dark Mode Dashboard
-*Beautiful, dark-themed dashboard showing templates, sidebar inputs, and resume builder visualizer.*
-![Dark Mode Dashboard](/public/og-image.png)
-
----
-
 ## 🚀 Vercel Production Deployment
 
 ResumeCraft Pro is configured for instant, one-click deployments to Vercel:
