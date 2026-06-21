@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://resumecraft-pro.vercel.app/sitemap.xml
