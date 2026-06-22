@@ -143,3 +143,15 @@
     padding: 0 !important;
   }
 }
+
+/* Resume PDF Layout and Break rules */
+.resume-text-break {
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+#resume-pdf-export * {
+  box-sizing: border-box !important;
+}
+

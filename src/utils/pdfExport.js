@@ -5,83 +5,138 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
   const element = document.getElementById(elementId);
   if (!element) throw new Error('Resume preview element not found');
 
-  // Wait for all fonts to be fully loaded so that character metrics are correct
-  if (document.fonts) {
-    await document.fonts.ready;
-  }
+  // Create an off-screen container for rendering A4 at full scale
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.top = '-9999px';
+  container.style.width = '794px';
+  container.style.margin = '0';
+  container.style.padding = '0';
 
-  const canvas = await html2canvas(element, {
-    scale: 2,
-    useCORS: true,
-    allowTaint: false,
-    backgroundColor: '#ffffff',
-    logging: false,
-    onclone: (clonedDoc) => {
-      const head = clonedDoc.head || clonedDoc.getElementsByTagName('head')[0];
-      if (head) {
-        // Copy stylesheet link elements and convert relative href to absolute URL
-        Array.from(document.querySelectorAll('link[rel="stylesheet"]')).forEach((link) => {
-          const newLink = clonedDoc.importNode(link, true);
-          if (newLink.href) {
-            // Force absolute URL resolution so about:blank iframe resolves it to the correct host
-            newLink.href = new URL(newLink.href, window.location.href).href;
-          }
-          head.appendChild(newLink);
+  // Clone the resume preview element
+  const clone = element.cloneNode(true);
+  clone.style.width = '794px';
+  clone.style.transform = 'none';
+  clone.style.margin = '0';
+  clone.style.padding = '0';
+  clone.style.boxShadow = 'none';
+  clone.style.borderRadius = '0';
+
+  container.appendChild(clone);
+  document.body.appendChild(container);
+
+  try {
+    // Wait for all images inside the clone to load completely
+    const images = Array.from(clone.querySelectorAll('img'));
+    await Promise.all(
+      images.map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve;
         });
-        
-        // Copy inline style elements (injected in Vite dev mode)
-        Array.from(document.querySelectorAll('style')).forEach((styleEl) => {
-          const newStyle = clonedDoc.importNode(styleEl, true);
-          head.appendChild(newStyle);
-        });
+      })
+    );
+
+    // Wait for fonts to be ready
+    if (document.fonts) {
+      await document.fonts.ready;
+    }
+
+    const templateRoot = clone.firstElementChild || clone;
+    const PAGE_HEIGHT = 1123; // A4 standard height at 96 DPI
+
+    // Identify block elements we want to keep together (avoid breaking inside them)
+    const avoidBreakSelectors = [
+      '[data-page-break="avoid"]',
+      'h1', 'h2', 'h3', 'h4',
+      '.mb-4', '.mb-3', '.mb-2',
+      'section', '.resume-section'
+    ].join(', ');
+
+    const elementsToKeepTogether = Array.from(templateRoot.querySelectorAll(avoidBreakSelectors));
+
+    // Dynamic page-break logic: Insert spacers to push elements to the next page
+    for (let i = 0; i < elementsToKeepTogether.length; i++) {
+      const el = elementsToKeepTogether[i];
+      const containerRect = templateRoot.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+
+      const top = elRect.top - containerRect.top;
+      const height = elRect.height;
+
+      // Skip elements that are hidden or larger than a single page
+      if (height <= 0 || height >= PAGE_HEIGHT) {
+        continue;
       }
 
-      // Copy font faces to the cloned iframe document context to prevent font fallbacks and overlap
-      if (document.fonts && clonedDoc.fonts) {
-        document.fonts.forEach((font) => {
-          clonedDoc.fonts.add(font);
-        });
+      const startPage = Math.floor(top / PAGE_HEIGHT);
+      const endPage = Math.floor((top + height) / PAGE_HEIGHT);
+
+      if (startPage !== endPage) {
+        // Element spans across a page boundary. Insert a spacer to push it to the next page.
+        const spacerHeight = PAGE_HEIGHT - (top % PAGE_HEIGHT);
+
+        const spacer = document.createElement('div');
+        spacer.style.height = `${spacerHeight}px`;
+        spacer.style.width = '100%';
+        spacer.style.clear = 'both';
+        spacer.style.backgroundColor = 'transparent';
+        spacer.className = 'pdf-page-break-spacer';
+
+        el.parentNode.insertBefore(spacer, el);
       }
-    },
-  });
+    }
 
-  const imgData = canvas.toDataURL('image/png');
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = pdf.internal.pageSize.getHeight();
-  
-  const imgWidth = canvas.width;
-  const imgHeight = canvas.height;
-  const ratio = pdfWidth / imgWidth;
-  let imgScaledWidth = pdfWidth;
-  let imgScaledHeight = imgHeight * ratio;
+    // Render the entire clone to a canvas using the requested high quality settings
+    const canvas = await html2canvas(clone, {
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+    });
 
-  // Smart single-page fit: if it overflows a single page by up to 30%,
-  // scale it down to fit on a single A4 page instead of generating a second page with empty space.
-  const overflowThreshold = 1.3;
-  const shouldForceSinglePage = imgScaledHeight <= pdfHeight * overflowThreshold;
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
 
-  if (shouldForceSinglePage) {
-    const canvasRatio = imgWidth / imgHeight;
-    imgScaledHeight = pdfHeight;
-    imgScaledWidth = pdfHeight * canvasRatio;
-    const xOffset = (pdfWidth - imgScaledWidth) / 2;
-    pdf.addImage(imgData, 'PNG', xOffset, 0, imgScaledWidth, imgScaledHeight);
-  } else {
-    // Multi-page layout for genuinely longer resumes
-    let position = 0;
-    pdf.addImage(imgData, 'PNG', 0, position, imgScaledWidth, imgScaledHeight);
+    // Determine the total pages based on the layout height
+    const totalHeight = templateRoot.offsetHeight;
+    const numPages = Math.ceil(totalHeight / PAGE_HEIGHT);
 
-    let heightLeft = imgScaledHeight - pdfHeight;
-    while (heightLeft > 0) {
-      position -= pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgScaledWidth, imgScaledHeight);
-      heightLeft -= pdfHeight;
+    const pageCanvasWidth = 794 * 3;
+    const pageCanvasHeight = 1123 * 3;
+
+    for (let page = 0; page < numPages; page++) {
+      if (page > 0) {
+        pdf.addPage();
+      }
+
+      // Crop canvas for the current page
+      const pageCanvas = document.createElement('canvas');
+      pageCanvas.width = pageCanvasWidth;
+      pageCanvas.height = pageCanvasHeight;
+      const ctx = pageCanvas.getContext('2d');
+
+      ctx.drawImage(
+        canvas,
+        0, page * pageCanvasHeight, pageCanvasWidth, pageCanvasHeight, // Source slice
+        0, 0, pageCanvasWidth, pageCanvasHeight // Destination bounds
+      );
+
+      const pageImgData = pageCanvas.toDataURL('image/jpeg', 0.95);
+      pdf.addImage(pageImgData, 'JPEG', 0, 0, pdfWidth, pdfHeight, undefined, 'FAST');
+    }
+
+    pdf.save(`${filename.replace(/\s+/g, '_')}.pdf`);
+  } finally {
+    // Always clean up the off-screen clone container
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
     }
   }
-
-  pdf.save(`${filename.replace(/\s+/g, '_')}.pdf`);
 };
 
 export const printResume = () => {

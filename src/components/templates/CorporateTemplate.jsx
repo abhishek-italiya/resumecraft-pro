@@ -23,16 +23,16 @@ const CorporateTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-white text-slate-800 p-8 min-h-[1123px] text-sm leading-relaxed" style={{ fontFamily: 'Georgia, serif' }}>
-      <div className="border-b-2 border-blue-600 pb-4 mb-5">
+    <div className="bg-white text-slate-800 p-8 min-h-[1123px] text-sm leading-relaxed flex flex-col" style={{ fontFamily: 'Georgia, serif' }}>
+      <div className="border-b-2 border-blue-600 pb-4 mb-6 shrink-0" data-page-break="avoid">
         <div className="flex items-start gap-4">
           {personal.profileImage && (
-            <img src={personal.profileImage} alt={personal.fullName} className="w-20 h-20 rounded-full object-cover border-2 border-blue-600" />
+            <img src={personal.profileImage} alt={personal.fullName} className="w-20 h-20 rounded-full object-cover border-2 border-blue-600 shrink-0" />
           )}
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-blue-800 uppercase tracking-wide">{personal.fullName}</h1>
+          <div className="flex-1 flex flex-col">
+            <h1 className="text-2xl font-bold text-blue-800 uppercase tracking-wide leading-none">{personal.fullName}</h1>
             <p className="text-base text-slate-600 mt-1">{personal.title}</p>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+            <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-2">
               <ContactLine icon={FiMail} text={personal.email} />
               <ContactLine icon={FiPhone} text={personal.phone} />
               <ContactLine icon={FiMapPin} text={personal.address} />
@@ -44,99 +44,114 @@ const CorporateTemplate = ({ data }) => {
         </div>
       </div>
 
-      {summary && (
-        <Section title="Professional Summary">
-          <p className="text-slate-700">{summary}</p>
-        </Section>
-      )}
+      <div className="flex flex-col flex-1">
+        {summary && (
+          <Section title="Professional Summary">
+            <p className="text-slate-700 resume-text-break text-justify">{summary}</p>
+          </Section>
+        )}
 
-      {experience?.length > 0 && experience[0].company && (
-        <Section title="Professional Experience">
-          {experience.map((exp) => (
-            <div key={exp.id} className="mb-4">
-              <div className="flex justify-between items-baseline">
-                <h3 className="font-bold text-slate-800">{exp.position}</h3>
-                <span className="text-xs text-slate-500">{formatDate(exp.startDate)} - {formatDate(exp.endDate)}</span>
-              </div>
-              <p className="text-blue-700 font-medium text-xs">{exp.company}</p>
-              <p className="text-slate-600 mt-1 text-xs">{exp.description}</p>
+        {experience?.length > 0 && experience[0].company && (
+          <Section title="Professional Experience">
+            <div className="flex flex-col gap-4">
+              {experience.map((exp) => (
+                <div key={exp.id} className="flex flex-col gap-1" data-page-break="avoid">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-slate-800 leading-snug">{exp.position}</h3>
+                    <span className="text-xs text-slate-500 font-mono shrink-0 ml-2">{formatDate(exp.startDate)} - {formatDate(exp.endDate)}</span>
+                  </div>
+                  <p className="text-blue-700 font-medium text-xs">{exp.company}</p>
+                  <p className="text-slate-600 text-xs resume-text-break text-justify">{exp.description}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </Section>
-      )}
+          </Section>
+        )}
 
-      {education?.length > 0 && education[0].college && (
-        <Section title="Education">
-          {education.map((edu) => (
-            <div key={edu.id} className="mb-3">
-              <div className="flex justify-between items-baseline">
-                <h3 className="font-bold text-slate-800">{edu.degree}</h3>
-                <span className="text-xs text-slate-500">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</span>
-              </div>
-              <p className="text-blue-700 text-xs">{edu.college}{edu.cgpa && ` | CGPA: ${edu.cgpa}`}</p>
+        {education?.length > 0 && education[0].college && (
+          <Section title="Education">
+            <div className="flex flex-col gap-3">
+              {education.map((edu) => (
+                <div key={edu.id} className="flex flex-col gap-1" data-page-break="avoid">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-slate-800 leading-snug">{edu.degree}</h3>
+                    <span className="text-xs text-slate-500 font-mono shrink-0 ml-2">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</span>
+                  </div>
+                  <p className="text-blue-700 text-xs">{edu.college}{edu.cgpa && ` | CGPA: ${edu.cgpa}`}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </Section>
-      )}
+          </Section>
+        )}
 
-      {skills?.categories?.length > 0 && skills.categories[0].name && (
-        <Section title="Skills">
-          <div className="grid grid-cols-2 gap-2">
-            {skills.categories.map((cat) => (
-              <div key={cat.id}>
-                <p className="font-bold text-xs text-slate-800">{cat.name}</p>
-                <p className="text-xs text-slate-600">{cat.skills.join(', ')}</p>
-              </div>
-            ))}
-          </div>
-        </Section>
-      )}
-
-      {projects?.length > 0 && projects[0].name && (
-        <Section title="Projects">
-          {projects.map((proj) => (
-            <div key={proj.id} className="mb-3">
-              <h3 className="font-bold text-slate-800">{proj.name}</h3>
-              <p className="text-xs text-slate-600">{proj.description}</p>
-              {proj.technologies && <p className="text-xs text-blue-700 mt-0.5">Tech: {proj.technologies}</p>}
+        {skills?.categories?.length > 0 && skills.categories[0].name && (
+          <Section title="Skills">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {skills.categories.map((cat) => (
+                <div key={cat.id} className="flex flex-col gap-0.5" data-page-break="avoid">
+                  <p className="font-bold text-xs text-slate-800 leading-none">{cat.name}</p>
+                  <p className="text-xs text-slate-600 resume-text-break">{cat.skills.join(', ')}</p>
+                </div>
+              ))}
             </div>
-          ))}
-        </Section>
-      )}
+          </Section>
+        )}
 
-      {certifications?.length > 0 && certifications[0].name && (
-        <Section title="Certifications">
-          {certifications.map((cert) => (
-            <div key={cert.id} className="mb-2">
-              <p className="font-bold text-xs">{cert.name} - <span className="font-normal text-slate-600">{cert.issuer}</span></p>
+        {projects?.length > 0 && projects[0].name && (
+          <Section title="Projects">
+            <div className="flex flex-col gap-3">
+              {projects.map((proj) => (
+                <div key={proj.id} className="flex flex-col gap-1" data-page-break="avoid">
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-slate-800 leading-snug">{proj.name}</h3>
+                    {proj.github && <a href={proj.github} className="text-xs text-blue-700 hover:underline shrink-0 ml-2">Repository</a>}
+                  </div>
+                  <p className="text-xs text-slate-600 resume-text-break">{proj.description}</p>
+                  {proj.technologies && <p className="text-xs text-blue-700 font-mono resume-text-break">Tech: {proj.technologies}</p>}
+                </div>
+              ))}
             </div>
-          ))}
-        </Section>
-      )}
+          </Section>
+        )}
 
-      {languages?.length > 0 && languages[0].name && (
-        <Section title="Languages">
-          <p className="text-xs">{languages.map((l) => `${l.name} (${l.proficiency})`).join(' | ')}</p>
-        </Section>
-      )}
-
-      {achievements?.length > 0 && achievements[0].title && (
-        <Section title="Achievements">
-          {achievements.map((ach) => (
-            <div key={ach.id} className="mb-2">
-              <p className="font-bold text-xs">{ach.title}</p>
-              <p className="text-xs text-slate-600">{ach.description}</p>
+        {certifications?.length > 0 && certifications[0].name && (
+          <Section title="Certifications">
+            <div className="flex flex-col gap-2">
+              {certifications.map((cert) => (
+                <div key={cert.id} className="flex flex-col gap-0.5" data-page-break="avoid">
+                  <p className="font-bold text-xs">{cert.name} - <span className="font-normal text-slate-600">{cert.issuer}</span></p>
+                </div>
+              ))}
             </div>
-          ))}
-        </Section>
-      )}
+          </Section>
+        )}
+
+        {languages?.length > 0 && languages[0].name && (
+          <Section title="Languages">
+            <p className="text-xs resume-text-break">{languages.map((l) => `${l.name} (${l.proficiency})`).join(' | ')}</p>
+          </Section>
+        )}
+
+        {achievements?.length > 0 && achievements[0].title && (
+          <Section title="Achievements">
+            <div className="flex flex-col gap-2">
+              {achievements.map((ach) => (
+                <div key={ach.id} className="flex flex-col gap-0.5" data-page-break="avoid">
+                  <p className="font-bold text-xs leading-snug">{ach.title}</p>
+                  <p className="text-xs text-slate-600 resume-text-break">{ach.description}</p>
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
+      </div>
     </div>
   );
 };
 
 const Section = ({ title, children }) => (
-  <div className="mb-4">
-    <h2 className="text-sm font-bold text-blue-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-2">{title}</h2>
+  <div className="flex flex-col gap-2 mb-6" data-page-break="avoid">
+    <h2 className="text-sm font-bold text-blue-800 uppercase tracking-wider border-b border-slate-200 pb-1 w-full">{title}</h2>
     {children}
   </div>
 );
