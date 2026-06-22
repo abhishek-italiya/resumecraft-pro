@@ -143,7 +143,7 @@ const ExecutiveTemplate = ({ data }) => {
 
 const ExecSection = ({ title, children, className = '' }) => (
   <div className={`flex flex-col gap-2 mb-6 ${className}`} data-page-break="avoid">
-    <h2 className="text-xs font-bold uppercase tracking-widest text-slate-700 border-b-2 border-double border-slate-300 pb-1 w-full">{title}</h2>
+    <h2 className="text-xs font-bold uppercase tracking-widest text-slate-700 border-b-2 border-slate-300 pb-1 w-full">{title}</h2>
     {children}
   </div>
 );

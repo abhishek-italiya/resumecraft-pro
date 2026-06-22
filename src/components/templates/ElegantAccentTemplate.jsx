@@ -12,8 +12,8 @@ const ElegantAccentTemplate = ({ data }) => {
           <img src={personal.profileImage} alt={personal.fullName} className="w-20 h-20 rounded-full object-cover mb-4 border border-amber-200 shadow-md shrink-0" />
         )}
         <h1 className="text-3xl font-light text-slate-900 tracking-wider mb-1 leading-none">
-          {personal.fullName.split(' ').map((name, index) => 
-            index === personal.fullName.split(' ').length - 1 ? (
+          {(personal.fullName || '').split(' ').map((name, index, arr) => 
+            index === arr.length - 1 ? (
               <span key={index} className="font-bold text-amber-600">{name}</span>
             ) : (
               name + ' '
