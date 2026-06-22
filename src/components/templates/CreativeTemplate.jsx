@@ -5,7 +5,7 @@ const CreativeTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-white text-slate-800 min-h-[842px] flex text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div className="bg-white text-slate-800 min-h-[1123px] flex text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
       <div className="w-[35%] shrink-0 bg-gradient-to-b from-purple-700 to-purple-900 text-white p-6">
         {personal.profileImage && (
           <img src={personal.profileImage} alt={personal.fullName} className="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 border-2 border-white/30" />

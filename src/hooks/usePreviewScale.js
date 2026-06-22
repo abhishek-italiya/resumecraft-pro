@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 
-const A4_WIDTH = 595;
+const A4_WIDTH = 794;
 
 export const usePreviewScale = () => {
   const containerRef = useRef(null);

@@ -27,6 +27,10 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
           try {
             if (sheet.cssRules) {
               Array.from(sheet.cssRules).forEach((rule) => {
+                // Skip font-face (5) and import (3) rules to prevent async reloading overlaps
+                if (rule.type === 3 || rule.type === 5 || rule.cssText.startsWith('@import') || rule.cssText.startsWith('@font-face')) {
+                  return;
+                }
                 cssText += rule.cssText + '\n';
               });
             }

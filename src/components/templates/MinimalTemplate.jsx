@@ -4,7 +4,7 @@ const MinimalTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-white text-slate-800 p-10 min-h-[842px] text-sm" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
+    <div className="bg-white text-slate-800 p-10 min-h-[1123px] text-sm" style={{ fontFamily: 'Helvetica, Arial, sans-serif' }}>
       <div className="text-center mb-8">
         {personal.profileImage && (
           <img src={personal.profileImage} alt={personal.fullName} className="w-16 h-16 rounded-full object-cover mx-auto mb-3" />

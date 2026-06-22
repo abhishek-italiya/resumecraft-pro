@@ -51,7 +51,7 @@ const ResumeBuilder = () => {
           position: 'absolute',
           left: '-9999px',
           top: '-9999px',
-          width: '595px', // Matches A4_WIDTH
+          width: '794px', // Matches A4_WIDTH (794px)
         }}
       >
         <ResumePreview data={resume} id="resume-pdf-export" />

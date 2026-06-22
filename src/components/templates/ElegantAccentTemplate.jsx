@@ -5,7 +5,7 @@ const ElegantAccentTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages } = data;
 
   return (
-    <div className="bg-white text-slate-800 p-10 min-h-[842px] text-sm flex flex-col gap-6" style={{ fontFamily: '"Inter", sans-serif' }}>
+    <div className="bg-white text-slate-800 p-10 min-h-[1123px] text-sm flex flex-col gap-6" style={{ fontFamily: '"Inter", sans-serif' }}>
       {/* Header */}
       <div className="flex flex-col items-center text-center border-b-4 border-amber-500 pb-6">
         {personal.profileImage && (

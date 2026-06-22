@@ -5,7 +5,7 @@ const BoldHeaderTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-white text-slate-800 min-h-[842px] text-sm flex flex-col" style={{ fontFamily: 'Inter, sans-serif' }}>
+    <div className="bg-white text-slate-800 min-h-[1123px] text-sm flex flex-col" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Bold Top Banner */}
       <div className="w-full bg-[#1E1B4B] text-white p-8 flex flex-row items-center gap-6">
         {personal.profileImage && (
