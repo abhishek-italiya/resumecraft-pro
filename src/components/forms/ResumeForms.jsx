@@ -27,16 +27,39 @@ export const PersonalInfoForm = ({ data, onChange }) => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div className="relative">
           {data.profileImage ? (
-            <img src={data.profileImage} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-primary" />
+            <div className="relative w-20 h-20">
+              <img src={data.profileImage} alt="Profile" className="w-20 h-20 rounded-full object-cover border-2 border-primary" />
+              <button
+                type="button"
+                onClick={() => onChange('profileImage', '')}
+                className="absolute -top-1 -right-1 p-1 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors shadow-md cursor-pointer flex items-center justify-center"
+                title="Remove Photo"
+              >
+                <FiTrash2 size={12} />
+              </button>
+            </div>
           ) : (
             <div className="w-20 h-20 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-400 text-xs">Photo</div>
           )}
-          <label className="absolute -bottom-1 -right-1 p-1.5 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/80 transition-colors">
-            <FiPlus size={12} />
-            <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
-          </label>
+          {!data.profileImage && (
+            <label className="absolute -bottom-1 -right-1 p-1.5 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/80 transition-colors">
+              <FiPlus size={12} />
+              <input type="file" accept="image/*" onChange={handleImageUpload} className="hidden" />
+            </label>
+          )}
         </div>
-        <p className="text-xs text-slate-500">Upload a professional profile photo</p>
+        <div className="flex flex-col gap-1 items-start">
+          <p className="text-xs text-slate-500">Upload a professional profile photo</p>
+          {data.profileImage && (
+            <button
+              type="button"
+              onClick={() => onChange('profileImage', '')}
+              className="text-xs text-red-500 font-medium hover:underline cursor-pointer"
+            >
+              Remove Photo
+            </button>
+          )}
+        </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <Input label="Full Name" value={data.fullName} onChange={(e) => onChange('fullName', e.target.value)} placeholder="John Doe" />
