@@ -7,7 +7,7 @@ const BoldHeaderTemplate = ({ data }) => {
   return (
     <div className="bg-white text-slate-800 min-h-[842px] text-sm flex flex-col" style={{ fontFamily: 'Inter, sans-serif' }}>
       {/* Bold Top Banner */}
-      <div className="bg-[#1E1B4B] text-white p-8 flex flex-row items-center gap-6">
+      <div className="w-full bg-[#1E1B4B] text-white p-8 flex flex-row items-center gap-6">
         {personal.profileImage && (
           <img src={personal.profileImage} alt={personal.fullName} className="w-20 h-20 rounded-full object-cover border-2 border-indigo-400" />
         )}
@@ -17,37 +17,39 @@ const BoldHeaderTemplate = ({ data }) => {
           
           <div className="flex flex-wrap justify-start gap-x-4 gap-y-1.5 text-xs text-indigo-100">
             {personal.email && (
-              <span className="flex items-center gap-1"><FiMail size={12} className="text-indigo-400" />{personal.email}</span>
+              <span className="inline-flex items-center gap-1"><FiMail size={12} className="text-indigo-400" />{personal.email}</span>
             )}
             {personal.phone && (
-              <span className="flex items-center gap-1"><FiPhone size={12} className="text-indigo-400" />{personal.phone}</span>
+              <span className="inline-flex items-center gap-1"><FiPhone size={12} className="text-indigo-400" />{personal.phone}</span>
             )}
             {personal.address && (
-              <span className="flex items-center gap-1"><FiMapPin size={12} className="text-indigo-400" />{personal.address}</span>
+              <span className="inline-flex items-center gap-1"><FiMapPin size={12} className="text-indigo-400" />{personal.address}</span>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 justify-center text-xs border-l border-indigo-900/60 pl-6 shrink-0">
-          {personal.linkedin && (
-            <a href={personal.linkedin} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
-              <FiLinkedin size={12} /> linkedin
-            </a>
-          )}
-          {personal.github && (
-            <a href={personal.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
-              <FiGithub size={12} /> github
-            </a>
-          )}
-          {personal.portfolio && (
-            <a href={personal.portfolio} target="_blank" rel="noreferrer" className="flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
-              <FiGlobe size={12} /> portfolio
-            </a>
-          )}
-        </div>
+        {(personal.linkedin || personal.github || personal.portfolio) && (
+          <div className="flex flex-col gap-3 justify-center text-xs border-l border-indigo-900/60 pl-6 shrink-0">
+            {personal.linkedin && (
+              <a href={personal.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
+                <FiLinkedin size={12} /> linkedin
+              </a>
+            )}
+            {personal.github && (
+              <a href={personal.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
+                <FiGithub size={12} /> github
+              </a>
+            )}
+            {personal.portfolio && (
+              <a href={personal.portfolio} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-indigo-200 hover:text-white transition-colors">
+                <FiGlobe size={12} /> portfolio
+              </a>
+            )}
+          </div>
+        )}
       </div>
 
-      <div className="flex flex-1 p-8 gap-8">
+      <div className="w-full flex flex-1 p-8 gap-8">
         {/* Left column - 35% */}
         <div className="w-[35%] shrink-0 flex flex-col gap-6 border-r border-slate-100 pr-6">
           {skills?.categories?.length > 0 && skills.categories[0].name && (
