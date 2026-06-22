@@ -48,12 +48,7 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
     const PAGE_HEIGHT = 1123; // A4 standard height at 96 DPI
 
     // Identify block elements we want to keep together (avoid breaking inside them)
-    const avoidBreakSelectors = [
-      '[data-page-break="avoid"]',
-      'h1', 'h2', 'h3', 'h4',
-      '.mb-4', '.mb-3', '.mb-2',
-      'section', '.resume-section'
-    ].join(', ');
+    const avoidBreakSelectors = '[data-page-break="avoid"]';
 
     const elementsToKeepTogether = Array.from(templateRoot.querySelectorAll(avoidBreakSelectors));
 
