@@ -19,42 +19,17 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
     onclone: (clonedDoc) => {
       const head = clonedDoc.head || clonedDoc.getElementsByTagName('head')[0];
       if (head) {
-        // 1. Try to inline all CSS rules directly to avoid asynchronous loading and relative path resolution issues
-        const style = clonedDoc.createElement('style');
-        let cssText = '';
-        
-        Array.from(document.styleSheets).forEach((sheet) => {
-          try {
-            if (sheet.cssRules) {
-              Array.from(sheet.cssRules).forEach((rule) => {
-                // Skip font-face (5) and import (3) rules to prevent async reloading overlaps
-                if (rule.type === 3 || rule.type === 5 || rule.cssText.startsWith('@import') || rule.cssText.startsWith('@font-face')) {
-                  return;
-                }
-                cssText += rule.cssText + '\n';
-              });
-            }
-          } catch (e) {
-            // CSS rules might be inaccessible for cross-origin sheets (rare here, but good to handle)
-            console.warn('Could not read style rules from sheet:', e);
-          }
-        });
-        
-        if (cssText) {
-          style.appendChild(clonedDoc.createTextNode(cssText));
-          head.appendChild(style);
-        }
-
-        // 2. Also copy link tags with absolute URLs and style tags as a fallback or auxiliary styles
+        // Copy stylesheet link elements and convert relative href to absolute URL
         Array.from(document.querySelectorAll('link[rel="stylesheet"]')).forEach((link) => {
           const newLink = clonedDoc.importNode(link, true);
           if (newLink.href) {
-            // Force absolute URL resolution so about:blank resolves it to the correct host
+            // Force absolute URL resolution so about:blank iframe resolves it to the correct host
             newLink.href = new URL(newLink.href, window.location.href).href;
           }
           head.appendChild(newLink);
         });
         
+        // Copy inline style elements (injected in Vite dev mode)
         Array.from(document.querySelectorAll('style')).forEach((styleEl) => {
           const newStyle = clonedDoc.importNode(styleEl, true);
           head.appendChild(newStyle);
