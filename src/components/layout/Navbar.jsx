@@ -21,7 +21,8 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    setIsOpen(false);
+    const handle = requestAnimationFrame(() => setIsOpen(false));
+    return () => cancelAnimationFrame(handle);
   }, [location]);
 
   useEffect(() => {

@@ -30,9 +30,13 @@ export const formatDate = (dateStr) => {
   if (!dateStr) return '';
   if (dateStr === 'Present') return 'Present';
   try {
-    const [year, month] = dateStr.split('-');
+    const parts = dateStr.split('-');
+    if (parts.length < 2) return dateStr;
+    const [year, month] = parts;
+    const monthVal = parseInt(month, 10);
+    if (isNaN(monthVal) || monthVal < 1 || monthVal > 12) return dateStr;
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${months[parseInt(month, 10) - 1]} ${year}`;
+    return `${months[monthVal - 1]} ${year}`;
   } catch {
     return dateStr;
   }
