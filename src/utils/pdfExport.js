@@ -17,18 +17,42 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
     backgroundColor: '#ffffff',
     logging: false,
     onclone: (clonedDoc) => {
-      // Copy all style tags and link tags to clonedDoc head to ensure Tailwind and custom styles are applied
       const head = clonedDoc.head || clonedDoc.getElementsByTagName('head')[0];
       if (head) {
-        // Copy stylesheet link elements
+        // 1. Try to inline all CSS rules directly to avoid asynchronous loading and relative path resolution issues
+        const style = clonedDoc.createElement('style');
+        let cssText = '';
+        
+        Array.from(document.styleSheets).forEach((sheet) => {
+          try {
+            if (sheet.cssRules) {
+              Array.from(sheet.cssRules).forEach((rule) => {
+                cssText += rule.cssText + '\n';
+              });
+            }
+          } catch (e) {
+            // CSS rules might be inaccessible for cross-origin sheets (rare here, but good to handle)
+            console.warn('Could not read style rules from sheet:', e);
+          }
+        });
+        
+        if (cssText) {
+          style.appendChild(clonedDoc.createTextNode(cssText));
+          head.appendChild(style);
+        }
+
+        // 2. Also copy link tags with absolute URLs and style tags as a fallback or auxiliary styles
         Array.from(document.querySelectorAll('link[rel="stylesheet"]')).forEach((link) => {
           const newLink = clonedDoc.importNode(link, true);
+          if (newLink.href) {
+            // Force absolute URL resolution so about:blank resolves it to the correct host
+            newLink.href = new URL(newLink.href, window.location.href).href;
+          }
           head.appendChild(newLink);
         });
         
-        // Copy inline style elements (which contain dynamically injected Tailwind CSS in Vite dev)
-        Array.from(document.querySelectorAll('style')).forEach((style) => {
-          const newStyle = clonedDoc.importNode(style, true);
+        Array.from(document.querySelectorAll('style')).forEach((styleEl) => {
+          const newStyle = clonedDoc.importNode(styleEl, true);
           head.appendChild(newStyle);
         });
       }
