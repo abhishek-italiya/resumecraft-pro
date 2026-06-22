@@ -20,7 +20,7 @@ const stats = [
 const features = [
   { icon: FiEye, title: 'Live Preview', desc: 'See changes instantly as you type' },
   { icon: FiDownload, title: 'PDF Export', desc: 'Download print-ready PDF resumes' },
-  { icon: FiLayers, title: '3 Templates', desc: 'Professional designs for every industry' },
+  { icon: FiLayers, title: '8 Templates', desc: 'Professional designs for every industry' },
   { icon: FiShield, title: 'ATS Friendly', desc: 'Optimized for applicant tracking systems' },
   { icon: FiZap, title: 'Auto Save', desc: 'Never lose your progress' },
   { icon: FiSmartphone, title: 'Responsive', desc: 'Build on any device, anywhere' },

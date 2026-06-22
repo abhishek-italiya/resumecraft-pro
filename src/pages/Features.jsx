@@ -9,7 +9,7 @@ import { AnimatedCard, PageTransition } from '../utils/animations';
 const features = [
   { icon: FiEye, title: 'Live Resume Preview', desc: 'Watch your resume come to life as you type. Every change reflects instantly in the preview panel.', color: 'primary' },
   { icon: FiDownload, title: 'PDF Download', desc: 'Generate high-quality, print-ready PDF files with a single click. Perfect for job applications.', color: 'secondary' },
-  { icon: FiLayers, title: 'Multiple Templates', desc: 'Choose from Corporate Professional, Creative Modern, and Minimal Elegant designs.', color: 'accent' },
+  { icon: FiLayers, title: '8 Templates', desc: 'Choose from 8 professional resume designs tailored for every industry.', color: 'accent' },
   { icon: FiShield, title: 'ATS Friendly', desc: 'All templates are optimized to pass Applicant Tracking Systems used by recruiters worldwide.', color: 'success' },
   { icon: FiSave, title: 'Auto Save', desc: 'Your progress is automatically saved to local storage. Pick up right where you left off.', color: 'primary' },
   { icon: FiSmartphone, title: 'Mobile Responsive', desc: 'Build and edit your resume on any device — desktop, tablet, or mobile phone.', color: 'secondary' },
