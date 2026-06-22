@@ -5,7 +5,7 @@ const TechSidebarTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-[#FAFBFD] text-slate-800 min-h-[1056px] flex text-sm" style={{ fontFamily: '"Fira Code", "Courier New", Courier, monospace, system-ui' }}>
+    <div className="bg-[#FAFBFD] text-slate-800 min-h-[842px] flex text-sm" style={{ fontFamily: '"Fira Code", "Courier New", Courier, monospace, system-ui' }}>
       {/* Sidebar - 32% */}
       <div className="w-[32%] bg-[#1E293B] text-slate-200 p-6 flex flex-col justify-between">
         <div>

@@ -4,7 +4,7 @@ const ExecutiveTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-[#FCFDFE] text-slate-900 p-12 min-h-[1056px] text-sm" style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif' }}>
+    <div className="bg-[#FCFDFE] text-slate-900 p-12 min-h-[842px] text-sm" style={{ fontFamily: 'Georgia, "Times New Roman", Times, serif' }}>
       {/* Header */}
       <div className="text-center mb-6">
         {personal.profileImage && (

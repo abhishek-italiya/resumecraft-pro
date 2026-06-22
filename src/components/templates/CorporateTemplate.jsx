@@ -20,7 +20,7 @@ const CorporateTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages, achievements } = data;
 
   return (
-    <div className="bg-white text-slate-800 p-8 min-h-[1056px] text-sm leading-relaxed" style={{ fontFamily: 'Georgia, serif' }}>
+    <div className="bg-white text-slate-800 p-8 min-h-[842px] text-sm leading-relaxed" style={{ fontFamily: 'Georgia, serif' }}>
       <div className="border-b-2 border-blue-600 pb-4 mb-5">
         <div className="flex items-start gap-4">
           {personal.profileImage && (

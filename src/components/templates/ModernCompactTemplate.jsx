@@ -4,7 +4,7 @@ const ModernCompactTemplate = ({ data }) => {
   const { personal, summary, education, experience, projects, skills, certifications, languages } = data;
 
   return (
-    <div className="bg-white text-slate-800 p-8 min-h-[1056px] text-xs flex flex-col gap-5" style={{ fontFamily: '"Inter", "system-ui", sans-serif' }}>
+    <div className="bg-white text-slate-800 p-8 min-h-[842px] text-xs flex flex-col gap-5" style={{ fontFamily: '"Inter", "system-ui", sans-serif' }}>
       {/* Top section: Two column Header */}
       <div className="flex justify-between items-center border-b border-slate-200 pb-4">
         <div>

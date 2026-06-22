@@ -50,18 +50,32 @@ export const downloadPDF = async (elementId, filename = 'resume') => {
   const imgWidth = canvas.width;
   const imgHeight = canvas.height;
   const ratio = pdfWidth / imgWidth;
-  const imgScaledWidth = pdfWidth;
-  const imgScaledHeight = imgHeight * ratio;
+  let imgScaledWidth = pdfWidth;
+  let imgScaledHeight = imgHeight * ratio;
 
-  let position = 0;
-  pdf.addImage(imgData, 'PNG', 0, position, imgScaledWidth, imgScaledHeight);
+  // Smart single-page fit: if it overflows a single page by up to 30%,
+  // scale it down to fit on a single A4 page instead of generating a second page with empty space.
+  const overflowThreshold = 1.3;
+  const shouldForceSinglePage = imgScaledHeight <= pdfHeight * overflowThreshold;
 
-  let heightLeft = imgScaledHeight - pdfHeight;
-  while (heightLeft > 0) {
-    position -= pdfHeight;
-    pdf.addPage();
+  if (shouldForceSinglePage) {
+    const canvasRatio = imgWidth / imgHeight;
+    imgScaledHeight = pdfHeight;
+    imgScaledWidth = pdfHeight * canvasRatio;
+    const xOffset = (pdfWidth - imgScaledWidth) / 2;
+    pdf.addImage(imgData, 'PNG', xOffset, 0, imgScaledWidth, imgScaledHeight);
+  } else {
+    // Multi-page layout for genuinely longer resumes
+    let position = 0;
     pdf.addImage(imgData, 'PNG', 0, position, imgScaledWidth, imgScaledHeight);
-    heightLeft -= pdfHeight;
+
+    let heightLeft = imgScaledHeight - pdfHeight;
+    while (heightLeft > 0) {
+      position -= pdfHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgScaledWidth, imgScaledHeight);
+      heightLeft -= pdfHeight;
+    }
   }
 
   pdf.save(`${filename.replace(/\s+/g, '_')}.pdf`);
