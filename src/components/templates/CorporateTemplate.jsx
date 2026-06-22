@@ -5,15 +5,18 @@ import {
 
 const ContactLine = ({ icon: Icon, text, href }) => {
   if (!text) return null;
+  const className = "inline-flex items-center gap-1.5 text-xs text-slate-600";
   const content = (
-    <span className="flex items-center gap-1.5 text-xs text-slate-600">
+    <>
       <Icon className="shrink-0 text-blue-600" size={12} />
       <span className="truncate">{text.replace(/^https?:\/\/(www\.)?/, '')}</span>
-    </span>
+    </>
   );
   return href ? (
-    <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer">{content}</a>
-  ) : content;
+    <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>
+  ) : (
+    <span className={className}>{content}</span>
+  );
 };
 
 const CorporateTemplate = ({ data }) => {

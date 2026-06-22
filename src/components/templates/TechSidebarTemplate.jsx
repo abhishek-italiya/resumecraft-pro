@@ -7,7 +7,7 @@ const TechSidebarTemplate = ({ data }) => {
   return (
     <div className="bg-[#FAFBFD] text-slate-800 min-h-[842px] flex text-sm" style={{ fontFamily: '"Fira Code", "Courier New", Courier, monospace, system-ui' }}>
       {/* Sidebar - 32% */}
-      <div className="w-[32%] bg-[#1E293B] text-slate-200 p-6 flex flex-col justify-between">
+      <div className="w-[32%] shrink-0 bg-[#1E293B] text-slate-200 p-6 flex flex-col justify-between">
         <div>
           {personal.profileImage && (
             <img src={personal.profileImage} alt={personal.fullName} className="w-20 h-20 rounded-full object-cover mx-auto mb-4 border-2 border-emerald-400" />
@@ -147,12 +147,18 @@ const SidebarSection = ({ title, children }) => (
 );
 
 const SidebarItem = ({ icon: Icon, text, href }) => {
+  const className = "inline-flex items-center gap-2 text-xs mb-1.5 text-slate-300 hover:text-white transition-colors truncate w-full";
   const content = (
-    <span className="flex items-center gap-2 text-xs mb-1.5 text-slate-300 hover:text-white transition-colors">
-      <Icon size={12} className="text-emerald-400 shrink-0" /> <span className="truncate">{text}</span>
-    </span>
+    <>
+      <Icon size={12} className="text-emerald-400 shrink-0" />
+      <span className="truncate">{text}</span>
+    </>
   );
-  return href ? <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer" className="truncate">{content}</a> : content;
+  return href ? (
+    <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>
+  ) : (
+    <span className={className}>{content}</span>
+  );
 };
 
 const MainSection = ({ title, children }) => (

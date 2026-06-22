@@ -6,7 +6,7 @@ const CreativeTemplate = ({ data }) => {
 
   return (
     <div className="bg-white text-slate-800 min-h-[842px] flex text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
-      <div className="w-[35%] bg-gradient-to-b from-purple-700 to-purple-900 text-white p-6">
+      <div className="w-[35%] shrink-0 bg-gradient-to-b from-purple-700 to-purple-900 text-white p-6">
         {personal.profileImage && (
           <img src={personal.profileImage} alt={personal.fullName} className="w-24 h-24 rounded-2xl object-cover mx-auto mb-4 border-2 border-white/30" />
         )}
@@ -122,12 +122,18 @@ const SidebarSection = ({ title, children }) => (
 );
 
 const SidebarItem = ({ icon: Icon, text, href }) => {
+  const className = "inline-flex items-center gap-2 text-xs mb-1.5 text-purple-100 truncate w-full";
   const content = (
-    <span className="flex items-center gap-2 text-xs mb-1.5 text-purple-100">
-      <Icon size={12} /> {text}
-    </span>
+    <>
+      <Icon size={12} className="shrink-0" />
+      <span className="truncate">{text}</span>
+    </>
   );
-  return href ? <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer">{content}</a> : content;
+  return href ? (
+    <a href={href.startsWith('http') ? href : `https://${href}`} target="_blank" rel="noopener noreferrer" className={className}>{content}</a>
+  ) : (
+    <span className={className}>{content}</span>
+  );
 };
 
 const MainSection = ({ title, children }) => (
